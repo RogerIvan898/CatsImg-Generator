@@ -1,13 +1,13 @@
 const inputImgTag = document.getElementById('input-tag')
 const inputImgText = document.getElementById('input-text')
 const buttonGenerate = document.getElementById('button-request')
-const imgArea = document.getElementById('img-area')
+const imgContainer = document.getElementById('img-area')
+const checkBoxIsGif = document.getElementById('is-gif')
 
 buttonGenerate.addEventListener('click', generateImg)
 
 async function requestImg(url){
   const response = await fetch(url)
-  console.log()
   if(!response.ok){
     return null
   }
@@ -24,53 +24,54 @@ async function generateImg(){
     return
   }
 
-  setElementOpacity(0.7, Array.from(imgArea.children))
+  setElementOpacity(0.7, Array.from(imgContainer.children))
 
   const imgUrl = await requestImg(url)
 
   handleResponse(imgUrl)
 
-  setElementOpacity(1, Array.from(imgArea.children))
+  setElementOpacity(1, Array.from(imgContainer.children))
 }
-
 function handleResponse(response){
-  if(!response){
-    handleBadResponse()
-    return
-  }
-
-  handleOkResponse(response)
+  response ? handleOkResponse(response) : handleBadResponse()
 }
-
 function handleOkResponse(url){
-  clearElementContent(imgArea)
+  clearElementContent(imgContainer)
 
-  const imgElement = document.createElement('img')
-  imgElement.setAttribute('id', 'img')
+  const imgElement = document.getElementById('img') || document.createElement('img')
+  imgElement.id = 'img'
   imgElement.src = url
 
-  imgArea.appendChild(imgElement)
+  imgContainer.appendChild(imgElement)
 }
 
 function handleBadResponse(){
-  clearElementContent(imgArea)
+  clearElementContent(imgContainer)
 
   const warningElement = document.createElement('h1')
   warningElement.textContent = 'Нет такого'
-  imgArea.appendChild(warningElement)
+  imgContainer.appendChild(warningElement)
 }
 
 function getApiUrl(){
   const tag = inputImgTag.value
-  const text = inputImgText.value
+  const textContent = inputImgText.value
+  const isGif = checkBoxIsGif.checked
 
-  let url = ''
+  let url = 'https://cataas.com/cat'
 
-  if(tag && !text){
-    url = `https://cataas.com/cat/${tag}`
+  if(isGif){
+
+    url += '/gif'
+    if(textContent){
+      url += `/says/${textContent}`
+    }
   }
-  else if(tag && text){
-    url = `https://cataas.com/cat/${tag}/says/${text}`
+  else if(tag){
+    url += `/${tag}`
+    if(textContent){
+      url += `/says/${textContent}`
+    }
   }
 
   return url
@@ -87,8 +88,5 @@ function setElementOpacity(opacityRate, elements){
 }
 
 function clearElementContent(element){
-  if(!element.hasChildNodes()){
-    return
-  }
-  Array.from(element.children).forEach(childElement => childElement.remove())
+  element.innerHTML = ''
 }

@@ -9,11 +9,25 @@
 <body>
   <h1>Генератор котов</h1>
   <div id="inputs-container">
-      <label for="input-tag">Введите тег</label>
-      <input id="input-tag" placeholder="tag"/>
-      <label for="input-text">Введите текст</label>
-      <textarea id="input-text" placeholder="text"
-      ></textarea>
+      <div class="input-container">
+          <label for="input-tag">Введите тег</label>
+          <input id="input-tag" placeholder="tag"/>
+      </div>
+      <div class="input-container">
+          <label for="input-text">Введите текст</label>
+          <textarea id="input-text" placeholder="text"></textarea>
+      </div>
+
+      <div class="input-container">
+          <label for="select-filter">Фильтр</label>
+          <select id="select-filter">
+              <option>none</option>
+              <option>blur</option>
+          </select>
+      </div>
+      <div class="checkbox-container">
+          <input id="is-gif" type="checkbox"> gif
+      </div>
   </div>
   <button id="button-request">Сгенерировать</button>
   <div id="img-area"></div>
