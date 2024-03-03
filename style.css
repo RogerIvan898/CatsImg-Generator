@@ -5,11 +5,6 @@ body{
     gap: 10px;
 }
 
-#img{
-    max-width: 1080px;
-    max-height: 720px;
-}
-
 #inputs-container{
     width: 30vw;
     gap: 10px;

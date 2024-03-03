@@ -21,9 +21,20 @@
       <div class="input-container">
           <label for="select-filter">Фильтр</label>
           <select id="select-filter">
-              <option>none</option>
-              <option>blur</option>
+              <option selected>none</option>
+              <option>mono</option>
+              <option>negate</option>
+              <option>custom</option>
           </select>
+      </div>
+      <div class="input-container">
+          <label for="input-red">Red: </label>
+          <input type="range" min="0" max="255" id="input-red" disabled>
+          <label for="input-green">Green: </label>
+          <input type="range" min="0" max="255" id="input-green" disabled>
+          <label for="input-blue">Blue: </label>
+          <input type="range" min="0" max="255" id="input-blue" disabled>
+          <div id="filter-preview" style="width: 30px; height: 30px"></div>
       </div>
       <div class="checkbox-container">
           <input id="is-gif" type="checkbox"> gif

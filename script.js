@@ -3,7 +3,19 @@ const inputImgText = document.getElementById('input-text')
 const buttonGenerate = document.getElementById('button-request')
 const imgContainer = document.getElementById('img-area')
 const checkBoxIsGif = document.getElementById('is-gif')
+const selectFilter = document.getElementById('select-filter')
+const colorFilterPreview = document.getElementById('filter-preview')
 
+
+const slidersFilter = {
+  sliderRed: document.getElementById('input-red'),
+  sliderGreen: document.getElementById('input-green'),
+  sliderBlue: document.getElementById('input-blue'),
+}
+
+handleFiltersSlide(colorFilterPreview)
+addEventListeners(Object.values(slidersFilter), 'input',() => handleFiltersSlide(colorFilterPreview))
+selectFilter.addEventListener('change', handleSelectFilterOption)
 buttonGenerate.addEventListener('click', generateImg)
 
 async function requestImg(url){
@@ -18,7 +30,13 @@ async function requestImg(url){
 }
 
 async function generateImg(){
-  const url = getApiUrl()
+  const getUrlProps = {
+    tag: inputImgTag.value,
+    textContent: inputImgText.value,
+    isGif: checkBoxIsGif.checked,
+    filter: selectFilter.value,
+  }
+  const url = getApiUrl(getUrlProps)
 
   if(!url) {
     return
@@ -39,7 +57,6 @@ function handleOkResponse(url){
   clearElementContent(imgContainer)
 
   const imgElement = document.getElementById('img') || document.createElement('img')
-  imgElement.id = 'img'
   imgElement.src = url
 
   imgContainer.appendChild(imgElement)
@@ -53,15 +70,13 @@ function handleBadResponse(){
   imgContainer.appendChild(warningElement)
 }
 
-function getApiUrl(){
-  const tag = inputImgTag.value
-  const textContent = inputImgText.value
-  const isGif = checkBoxIsGif.checked
+function getApiUrl(props){
+  const {tag, textContent, isGif, filter} = props
+  let isFiltered = false
 
   let url = 'https://cataas.com/cat'
 
   if(isGif){
-
     url += '/gif'
     if(textContent){
       url += `/says/${textContent}`
@@ -74,6 +89,21 @@ function getApiUrl(){
     }
   }
 
+  if(filter !== 'none'){
+    url +=  `?filter=${filter}`
+
+    if(filter === 'custom'){
+      const {sliderRed, sliderGreen, sliderBlue} = slidersFilter
+
+      url += `&r=${sliderRed.value}&g=${sliderGreen.value}&b=${sliderBlue.value}`
+    }
+    isFiltered = true
+  }
+
+  url += isFiltered ? '&' : '?'
+  url += 'type=square'
+
+  alert(url)
   return url
 }
 
@@ -89,4 +119,39 @@ function setElementOpacity(opacityRate, elements){
 
 function clearElementContent(element){
   element.innerHTML = ''
+}
+
+function addEventListeners(elements, type, listener){
+  elements = Array.isArray(elements) ? elements : [elements]
+  elements.forEach(() => addEventListener(type, listener))
+}
+
+function setBackgroundColorRgb(element, rgb){
+  const [red, green, blue] = rgb
+
+  element.style.backgroundColor = `rgb(${red}, ${green}, ${blue})`
+}
+
+function handleFiltersSlide(element){
+  const color = Object.values(slidersFilter).map(slider => slider.value)
+  setBackgroundColorRgb(element, color)
+}
+
+function handleSelectFilterOption(event){
+  const sliders = Object.values(slidersFilter)
+
+  if(event.target.value === 'custom'){
+    sliders.forEach(slider => toggleElementInteraction(slider))
+    return
+  }
+
+  sliders.forEach(slider => toggleElementInteraction(slider, true))
+}
+
+function toggleElementInteraction(element, force){
+  if(force !== undefined){
+    element.disabled = force
+    return
+  }
+  element.disabled = !element.disabled
 }
