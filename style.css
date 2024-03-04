@@ -5,19 +5,29 @@ body{
     gap: 10px;
 }
 
-#inputs-container{
+#options{
     width: 30vw;
-    gap: 10px;
+    gap: 3vw;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.input-container{
+.option-container{
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .checkbox-container{
     display: flex;
 }
 
+.overlay-element {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}

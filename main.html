@@ -4,21 +4,21 @@
     <meta charset="UTF-8">
     <title>Cat generator</title>
     <link rel="stylesheet" href="./style.css">
-    <script src="./script.js" defer></script>
+    <script type="module" src="./script.js" defer></script>
 </head>
 <body>
   <h1>Генератор котов</h1>
-  <div id="inputs-container">
-      <div class="input-container">
+  <div id="options">
+      <div class="option-container">
           <label for="input-tag">Введите тег</label>
           <input id="input-tag" placeholder="tag"/>
       </div>
-      <div class="input-container">
+      <div class="option-container">
           <label for="input-text">Введите текст</label>
           <textarea id="input-text" placeholder="text"></textarea>
       </div>
 
-      <div class="input-container">
+      <div class="option-container">
           <label for="select-filter">Фильтр</label>
           <select id="select-filter">
               <option selected>none</option>
@@ -27,7 +27,7 @@
               <option>custom</option>
           </select>
       </div>
-      <div class="input-container">
+      <div class="option-container">
           <label for="input-red">Red: </label>
           <input type="range" min="0" max="255" id="input-red" disabled>
           <label for="input-green">Green: </label>
@@ -37,10 +37,10 @@
           <div id="filter-preview" style="width: 30px; height: 30px"></div>
       </div>
       <div class="checkbox-container">
-          <input id="is-gif" type="checkbox"> gif
+          <input id="set-gif" type="checkbox"> gif
       </div>
   </div>
   <button id="button-request">Сгенерировать</button>
-  <div id="img-area"></div>
+  <div id="img-container"></div>
 </body>
 </html>
