@@ -1,5 +1,7 @@
 export function buildApiUrl(generateOptions){
-  const {tag, textContent, isGif, filter, sliders} = generateOptions
+  const {tag, textContent, isGif, filter, slidersValue, type, fontSize } = generateOptions
+
+  const params = [filter, type, slidersValue, fontSize]
 
   let url = 'https://cataas.com/cat'
 
@@ -14,25 +16,43 @@ export function buildApiUrl(generateOptions){
     url += addTextContentApi(textContent)
   }
 
-  if(filter !== 'none') {
-    url += addFilterApi(filter, sliders)
+  if(params.length) {
+    url += addParams(params)
   }
-
-  url +=  url.includes('?') ? '&' : '?'
-  url += 'type=square'
 
   return url
 }
 
-function addFilterApi(filter, sliders){
-  let filterOptions = `?filter=${filter}`
+function addParams(props){
+  const [filter, type, slidersValue, fontSize] = props
 
-  if(sliders !== undefined && filter === 'custom'){
-    const {sliderRed, sliderGreen, sliderBlue} = sliders
-    filterOptions += `&r=${sliderRed.value}&g=${sliderGreen.value}&b=${sliderBlue.value}`
+  let params = new URLSearchParams()
+
+  if(filter && filter !== 'none'){
+    params.append('filter', filter)
+
+    if(filter === 'custom'){
+      addCustomFilter(params, slidersValue)
+    }
   }
 
-  return filterOptions
+  if(fontSize){
+    params.append('fontSize', fontSize)
+  }
+
+  if(type){
+    params.append('type', type)
+  }
+
+  return '?' + params.toString()
+}
+
+function addCustomFilter(params, rgbValues){
+  const [red, green, blue] = rgbValues
+
+  params.append('r', red)
+  params.append('g', green)
+  params.append('b', blue)
 }
 
 function addGifApi(){

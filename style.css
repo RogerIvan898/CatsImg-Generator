@@ -25,6 +25,10 @@ body{
     display: flex;
 }
 
+.waiting{
+    font-size: 3rem;
+}
+
 .overlay-element {
     position: absolute;
     top: 50%;

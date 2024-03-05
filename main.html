@@ -17,14 +17,13 @@
           <label for="input-text">Введите текст</label>
           <textarea id="input-text" placeholder="text"></textarea>
       </div>
-
       <div class="option-container">
           <label for="select-filter">Фильтр</label>
           <select id="select-filter">
               <option selected>none</option>
+              <option>custom</option>
               <option>mono</option>
               <option>negate</option>
-              <option>custom</option>
           </select>
       </div>
       <div class="option-container">
@@ -36,9 +35,22 @@
           <input type="range" min="0" max="255" id="input-blue" disabled>
           <div id="filter-preview" style="width: 30px; height: 30px"></div>
       </div>
+      <div class="option-container">
+          <label for="select-type">Тип</label>
+          <select id="select-type" disabled>
+              <option>square</option>
+              <option>medium</option>
+              <option>xsmall</option>
+              <option>small</option>
+          </select>
+      </div>
       <div class="checkbox-container">
           <input id="set-gif" type="checkbox"> gif
       </div>
+  </div>
+  <div class="option-container">
+      <label for="input-fontSize">Размер шрифта</label>
+      <input id="input-fontSize" min="1" type="number">
   </div>
   <button id="button-request">Сгенерировать</button>
   <div id="img-container"></div>

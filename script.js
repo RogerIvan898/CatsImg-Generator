@@ -1,15 +1,16 @@
-import {clearElementContent, toggleElementInteraction, addEventListeners, setBackgroundColorRgb,
-  createChildElement, setChildrenOpacity,
-} from "./src/helpers.js";
-
+import {toggleElementInteraction, addEventListeners, setBackgroundColorRgb} from "./src/helpers.js";
 import {buildApiUrl} from "./src/apiUtilits.js";
+import {ImgContainer} from "./src/ImgContainer.js";
 
 const inputImgTag = document.getElementById('input-tag')
 const inputImgText = document.getElementById('input-text')
+const inputFontSize = document.getElementById('input-fontSize')
 
 const buttonGenerate = document.getElementById('button-request')
 const checkBoxIsGif = document.getElementById('set-gif')
+
 const selectFilter = document.getElementById('select-filter')
+const selectType = document.getElementById('select-type')
 
 const colorFilterPreview = document.getElementById('filter-preview')
 const imgContainer = document.getElementById('img-container')
@@ -25,9 +26,13 @@ handleFiltersSlide(colorFilterPreview)
 addEventListeners(Object.values(slidersFilter), 'input',() => handleFiltersSlide(colorFilterPreview))
 selectFilter.addEventListener('change', handleSelectFilterOption)
 buttonGenerate.addEventListener('click', generateImg)
+checkBoxIsGif.addEventListener('change', handleCheckboxChange)
+
+const container = new ImgContainer(imgContainer)
 
 async function requestImg(url){
   const response = await fetch(url)
+
   if(!response.ok){
     return null
   }
@@ -37,29 +42,15 @@ async function requestImg(url){
   return URL.createObjectURL(blobImg)
 }
 
-function generateWaitingImg(){
-  const element = createChildElement(imgContainer, 'h1')
-
-  element.textContent = '.'
-  element.classList.add('overlay-element')
-  element.style.fontSize = '3rem'
-
-  const interval = setInterval(() => {
-    if(!element.offsetWidth){
-      clearInterval(interval)
-    }
-
-    element.textContent.length < 3 ? element.textContent += '.' : element.textContent = '.'
-  }, 1000)
-}
-
 async function generateImg(){
   const options = {
     tag: inputImgTag.value,
     textContent: inputImgText.value,
     isGif: checkBoxIsGif.checked,
     filter: selectFilter.value,
-    sliders: slidersFilter,
+    slidersValue: Object.values(slidersFilter).map(slider => slider.value),
+    type: selectType.value,
+    fontSize: inputFontSize.value,
   }
 
   const url = buildApiUrl(options)
@@ -68,29 +59,27 @@ async function generateImg(){
     return
   }
 
-  generateWaitingImg()
-  setChildrenOpacity(imgContainer, 0.7)
+  container.wait()
+
+  container.setOpacity(0.7)
 
   const imgUrl = await requestImg(url)
-
   handleResponse(imgUrl)
 
-  setChildrenOpacity(imgContainer, 1)
+  container.setOpacity(1)
 }
 
 function handleResponse(response){
-  clearElementContent(imgContainer)
+  container.clear()
   response ? handleOkResponse(response) : handleBadResponse()
 }
 
 function handleOkResponse(url){
-  const imgElement = createChildElement(imgContainer, 'img')
-  imgElement.src = url
+  container.createImg(url)
 }
 
 function handleBadResponse(){
-  const warningElement = createChildElement(imgContainer, 'h1')
-  warningElement.textContent = 'Нет такого'
+  container.createWarning('Нет такого')
 }
 
 function handleFiltersSlide(element){
@@ -103,4 +92,12 @@ function handleSelectFilterOption(event){
   const sliders = Object.values(slidersFilter)
 
   sliders.forEach(slider => toggleElementInteraction(slider, !isCustomOption))
+}
+
+function handleCheckboxChange(event){
+  if(!event.target.checked){
+    selectType.value = 'square'
+  }
+
+  toggleElementInteraction(selectType)
 }
