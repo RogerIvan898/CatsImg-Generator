@@ -1,39 +1,22 @@
 export function buildApiUrl(generateOptions){
   const {tag, textContent, isGif, filter, slidersValue, type, fontSize } = generateOptions
 
-  const params = [filter, type, slidersValue, fontSize]
-
   let url = 'https://cataas.com/cat'
 
-  if(isGif){
-    url += addGifApi()
-  }
-  else if(tag){
-    url += addTagApi(tag)
-  }
-
-  if(textContent){
-    url += addTextContentApi(textContent)
-  }
-
-  if(params.length) {
-    url += addParams(params)
-  }
+  isGif ? url += addGifApi() : (tag && (url += addTagApi(tag)))
+  textContent && (url += addTextContentApi(textContent))
+  
+  url += addParams([filter, type, slidersValue, fontSize])
 
   return url
 }
 
-function addParams(props){
-  const [filter, type, slidersValue, fontSize] = props
-
+function addParams([filter, type, slidersValue, fontSize]){
   let params = new URLSearchParams()
 
   if(filter && filter !== 'none'){
     params.append('filter', filter)
-
-    if(filter === 'custom'){
-      addCustomFilter(params, slidersValue)
-    }
+    filter === 'custom' && addCustomFilter(params, slidersValue)
   }
 
   if(fontSize){
@@ -47,10 +30,9 @@ function addParams(props){
   return '?' + params.toString()
 }
 
-function addCustomFilter(params, [red, green, blue]){
-  params.append('r', red)
-  params.append('g', green)
-  params.append('b', blue)
+function addCustomFilter(params, rgbColors){
+  const colorLabels = ['r', 'g', 'b']
+  colorLabels.forEach((label, index) => params.append(label, rgbColors[index]))
 }
 
 function addGifApi(){

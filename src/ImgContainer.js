@@ -17,12 +17,10 @@ export class ImgContainer{
 
   createWarning(text){
     const warning = document.createElement('h1')
-
     warning.textContent = text
 
     this.add(warning)
   }
-
 
   createImg(src){
     const img = document.createElement('img')
@@ -33,7 +31,6 @@ export class ImgContainer{
 
   #createWaiting(){
     const waiting = document.createElement('h1')
-
     waiting.textContent = '.'
 
     waiting.classList.add('waiting', 'overlay-element')
@@ -50,6 +47,10 @@ export class ImgContainer{
   }
 
   clear(){
+    if(!this.#element){
+      return
+    }
+
     clearElementContent(this.#element)
   }
 
