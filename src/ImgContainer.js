@@ -17,7 +17,8 @@ export class ImgContainer{
 
   createWarning(text){
     const warning = document.createElement('h1')
-    warning.textContent = text || ''
+
+    warning.textContent = text
 
     this.add(warning)
   }
@@ -34,6 +35,7 @@ export class ImgContainer{
     const waiting = document.createElement('h1')
 
     waiting.textContent = '.'
+
     waiting.classList.add('waiting', 'overlay-element')
 
     const interval = setInterval(() => {
@@ -56,7 +58,7 @@ export class ImgContainer{
   }
 
   wait(){
-    const elements = Array.from(this.#element.getElementsByClassName('warning'))
+    const elements = Array.from(this.#element.getElementsByClassName('waiting'))
     elements.forEach(element => element.remove())
 
     this.#createWaiting()
