@@ -47,9 +47,7 @@ function addParams(props){
   return '?' + params.toString()
 }
 
-function addCustomFilter(params, rgbValues){
-  const [red, green, blue] = rgbValues
-
+function addCustomFilter(params, [red, green, blue]){
   params.append('r', red)
   params.append('g', green)
   params.append('b', blue)
