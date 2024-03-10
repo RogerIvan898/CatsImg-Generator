@@ -8,11 +8,9 @@ export class ImgContainer{
   }
 
   add(element){
-    if(!this.#element) {
-      return
+    if(this.#element) {
+      this.#element.appendChild(element)
     }
-
-    this.#element.appendChild(element)
   }
 
   createWarning(text){
@@ -32,7 +30,6 @@ export class ImgContainer{
   #createWaiting(){
     const waiting = document.createElement('h1')
     waiting.textContent = '.'
-
     waiting.classList.add('waiting', 'overlay-element')
 
     const interval = setInterval(() => {
@@ -47,11 +44,9 @@ export class ImgContainer{
   }
 
   clear(){
-    if(!this.#element){
-      return
+    if(this.#element){
+      clearElementContent(this.#element)
     }
-
-    clearElementContent(this.#element)
   }
 
   setOpacity(opacity){

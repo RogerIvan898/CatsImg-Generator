@@ -1,8 +1,17 @@
-import {toggleElementInteraction, addEventListeners, setBackgroundColorRgb} from "./src/helpers.js";
+import {
+  toggleElementInteraction,
+  addEventListeners,
+  setBackgroundColorRgb,
+  getObjectValuesByKey,
+  requestImg,
+} from "./src/helpers.js";
 import {buildApiUrl} from "./src/apiUtilits.js";
 import {ImgContainer} from "./src/ImgContainer.js";
+import './style.css'
 
-const inputImgTag = document.getElementById('input-tag')
+const DEFAULT_FONT_SIZE = 40
+
+const selectImgTag = document.getElementById('select-tag')
 const inputImgText = document.getElementById('input-text')
 const inputFontSize = document.getElementById('input-fontSize')
 
@@ -13,7 +22,6 @@ const selectFilter = document.getElementById('select-filter')
 const selectType = document.getElementById('select-type')
 
 const colorFilterPreview = document.getElementById('filter-preview')
-const imgContainer = document.getElementById('img-container')
 
 const slidersFilter = {
   sliderRed: document.getElementById('input-red'),
@@ -22,33 +30,22 @@ const slidersFilter = {
 }
 
 handleFiltersSlide(colorFilterPreview)
+inputFontSize.value = DEFAULT_FONT_SIZE
 
 addEventListeners(Object.values(slidersFilter), 'input',() => handleFiltersSlide(colorFilterPreview))
 selectFilter.addEventListener('change', handleSelectFilterOption)
 buttonGenerate.addEventListener('click', generateImg)
 checkBoxIsGif.addEventListener('change', handleCheckboxChange)
 
-const container = new ImgContainer(imgContainer)
-
-async function requestImg(url){
-  const response = await fetch(url)
-
-  if(!response.ok){
-    return null
-  }
-
-  const blobImg = await response.blob()
-
-  return URL.createObjectURL(blobImg)
-}
+const imgContainer = new ImgContainer(document.getElementById('img-container'))
 
 async function generateImg(){
   const options = {
-    tag: inputImgTag.value,
+    tag: selectImgTag.value,
     textContent: inputImgText.value,
     isGif: checkBoxIsGif.checked,
     filter: selectFilter.value,
-    slidersValue: Object.values(slidersFilter).map(slider => slider.value),
+    slidersValue: getObjectValuesByKey(slidersFilter, 'value'),
     type: selectType.value,
     fontSize: inputFontSize.value,
   }
@@ -59,31 +56,31 @@ async function generateImg(){
     return
   }
 
-  container.wait()
+  imgContainer.wait()
 
-  container.setOpacity(0.7)
+  imgContainer.setOpacity(0.7)
 
   const imgUrl = await requestImg(url)
   handleResponse(imgUrl)
 
-  container.setOpacity(1)
+  imgContainer.setOpacity(1)
 }
 
 function handleResponse(response){
-  container.clear()
+  imgContainer.clear()
   response ? handleOkResponse(response) : handleBadResponse()
 }
 
 function handleOkResponse(url){
-  container.createImg(url)
+  imgContainer.createImg(url)
 }
 
 function handleBadResponse(){
-  container.createWarning('Нет такого')
+  imgContainer.createWarning('Нет такого')
 }
 
 function handleFiltersSlide(element){
-  const color = Object.values(slidersFilter).map(slider => slider.value)
+  const color = getObjectValuesByKey(slidersFilter, 'value')
   setBackgroundColorRgb(element, color)
 }
 
@@ -98,6 +95,5 @@ function handleCheckboxChange(event){
   if(!event.target.checked){
     selectType.value = 'square'
   }
-
   toggleElementInteraction(selectType)
 }

@@ -3,15 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <title>Cat generator</title>
-    <link rel="stylesheet" href="./style.css">
     <script type="module" src="./script.js" defer></script>
 </head>
 <body>
   <h1>Генератор котов</h1>
   <div id="options">
       <div class="option-container">
-          <label for="input-tag">Введите тег</label>
-          <input id="input-tag" placeholder="tag"/>
+          <label for="select-tag">Выберите тег</label>
+          <select id="select-tag">
+              <option>random</option>
+              <option>sit</option>
+              <option>play</option>
+              <option>funny</option>
+              <option>big</option>
+              <option>small</option>
+              <option>cute</option>
+              <option>angry</option>
+          </select>
       </div>
       <div class="option-container">
           <label for="input-text">Введите текст</label>

@@ -3,8 +3,8 @@ export function toggleElementInteraction(element, force){
 }
 
 export function addEventListeners(elements, type, listener){
-  elements = Array.isArray(elements) ? elements : [elements]
-  elements.forEach(element => element.addEventListener(type, listener))
+  const elementsArray = Array.isArray(elements) ? elements : [elements]
+  elementsArray.forEach(element => element.addEventListener(type, listener))
 }
 
 export function clearElementContent(element){
@@ -13,4 +13,24 @@ export function clearElementContent(element){
 
 export function setBackgroundColorRgb(element, [red, green, blue]){
   element.style.backgroundColor = `rgb(${red}, ${green}, ${blue})`
+}
+
+export function copyObject(object){
+  return new object.constructor(object)
+}
+
+export function getObjectValuesByKey(object, key){
+  return Object.values(object).map(item => item[key])
+}
+
+export async function requestImg(url){
+  const response = await fetch(url)
+
+  if(!response.ok){
+    return null
+  }
+
+  const blobImg = await response.blob()
+
+  return URL.createObjectURL(blobImg)
 }

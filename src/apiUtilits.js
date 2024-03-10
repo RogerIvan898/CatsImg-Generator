@@ -1,38 +1,46 @@
+import {copyObject} from "./helpers.js";
+
 export function buildApiUrl(generateOptions){
   const {tag, textContent, isGif, filter, slidersValue, type, fontSize } = generateOptions
 
-  let url = 'https://cataas.com/cat'
+  const url = 'https://cataas.com/cat'
 
-  isGif ? url += addGifApi() : (tag && (url += addTagApi(tag)))
-  textContent && (url += addTextContentApi(textContent))
-  
-  url += addParams([filter, type, slidersValue, fontSize])
+  const addGif =  (url, isGif) => isGif ? url + addGifApi() : url
+  const addTag = (url, tag) => tag && !isGif && tag !== 'random' ? url + addTagApi(tag) : url
+  const addTextContent = (url, textContent) => textContent ? url + addTextContentApi(textContent) : url
 
-  return url
+  const urlWithGif = addGif(url, isGif)
+  const urlWithTag = addTag(urlWithGif, tag)
+  const urlWithTextContent = addTextContent(urlWithTag, textContent)
+
+  return urlWithTextContent + addParams([filter, type, slidersValue, fontSize])
 }
 
 function addParams([filter, type, slidersValue, fontSize]){
-  let params = new URLSearchParams()
+  const params = new URLSearchParams()
 
-  if(filter && filter !== 'none'){
-    params.append('filter', filter)
-    filter === 'custom' && addCustomFilter(params, slidersValue)
+  const appendUrlParam = (params, name, value) => {
+    const newParams = copyObject(params)
+    newParams.append(name, value)
+    return newParams
   }
 
-  if(fontSize){
-    params.append('fontSize', fontSize)
+  const addFilterType = (params, filter) => appendUrlParam(params, 'filter', filter)
+  const addFilterRgb = (params, rgbColors) => {
+    const colorLabels = ['r', 'g', 'b']
+    const newParams = copyObject(params)
+    colorLabels.forEach((label, index) => newParams.append(label, rgbColors[index]))
+    return newParams
   }
+  const addFontSize = (params, fontSize) => appendUrlParam(params, 'fontSize', fontSize)
+  const addType = (params, type) => type ? appendUrlParam(params, 'type', type) : params
 
-  if(type){
-    params.append('type', type)
-  }
+  const paramsWithFilterType = filter !== 'none' ? addFilterType(params, filter) : params
+  const paramsWithFilterRbg = filter === 'custom' ? addFilterRgb(paramsWithFilterType, slidersValue) : paramsWithFilterType
+  const paramsWithFontSize = fontSize ? addFontSize(paramsWithFilterRbg, fontSize) : paramsWithFilterRbg
+  const paramsWithImgType = type ? addType(paramsWithFontSize, type) : paramsWithFontSize
 
-  return '?' + params.toString()
-}
-
-function addCustomFilter(params, rgbColors){
-  const colorLabels = ['r', 'g', 'b']
-  colorLabels.forEach((label, index) => params.append(label, rgbColors[index]))
+  return '?' + paramsWithImgType
 }
 
 function addGifApi(){
