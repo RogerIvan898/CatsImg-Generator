@@ -45,6 +45,10 @@ export class ImgContainer{
 
   clear(){
     if(this.#element){
+      const img = this.#element.querySelector('img')
+      if(img && img.src){
+        URL.revokeObjectURL(img.src)
+      }
       clearElementContent(this.#element)
     }
   }

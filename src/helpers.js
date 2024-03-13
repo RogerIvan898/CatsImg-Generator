@@ -15,11 +15,7 @@ export function setBackgroundColorRgb(element, [red, green, blue]){
   element.style.backgroundColor = `rgb(${red}, ${green}, ${blue})`
 }
 
-export function copyObject(object){
-  return new object.constructor(object)
-}
-
-export function getObjectValuesByKey(object, key){
+export function getArrayOfObjectValuesByKey(object, key){
   return Object.values(object).map(item => item[key])
 }
 

@@ -1,5 +1,3 @@
-import {copyObject} from "./helpers.js";
-
 export function buildApiUrl(generateOptions){
   const {tag, textContent, isGif, filter, slidersValue, type, fontSize } = generateOptions
 
@@ -20,17 +18,15 @@ function addParams([filter, type, slidersValue, fontSize]){
   const params = new URLSearchParams()
 
   const appendUrlParam = (params, name, value) => {
-    const newParams = copyObject(params)
-    newParams.append(name, value)
-    return newParams
+    params.append(name, value)
+    return params
   }
 
   const addFilterType = (params, filter) => appendUrlParam(params, 'filter', filter)
   const addFilterRgb = (params, rgbColors) => {
     const colorLabels = ['r', 'g', 'b']
-    const newParams = copyObject(params)
-    colorLabels.forEach((label, index) => newParams.append(label, rgbColors[index]))
-    return newParams
+    colorLabels.forEach((label, index) => params.append(label, rgbColors[index]))
+    return params
   }
   const addFontSize = (params, fontSize) => appendUrlParam(params, 'fontSize', fontSize)
   const addType = (params, type) => type ? appendUrlParam(params, 'type', type) : params

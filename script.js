@@ -2,7 +2,7 @@ import {
   toggleElementInteraction,
   addEventListeners,
   setBackgroundColorRgb,
-  getObjectValuesByKey,
+  getArrayOfObjectValuesByKey,
   requestImg,
 } from "./src/helpers.js";
 import {buildApiUrl} from "./src/apiUtilits.js";
@@ -45,7 +45,7 @@ async function generateImg(){
     textContent: inputImgText.value,
     isGif: checkBoxIsGif.checked,
     filter: selectFilter.value,
-    slidersValue: getObjectValuesByKey(slidersFilter, 'value'),
+    slidersValue: getArrayOfObjectValuesByKey(slidersFilter, 'value'),
     type: selectType.value,
     fontSize: inputFontSize.value,
   }
@@ -80,7 +80,7 @@ function handleBadResponse(){
 }
 
 function handleFiltersSlide(element){
-  const color = getObjectValuesByKey(slidersFilter, 'value')
+  const color = getArrayOfObjectValuesByKey(slidersFilter, 'value')
   setBackgroundColorRgb(element, color)
 }
 
