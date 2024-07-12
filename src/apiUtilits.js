@@ -1,5 +1,5 @@
 export function buildApiUrl(generateOptions){
-  const {tag, textContent, isGif, filter, slidersValue, type, fontSize} = generateOptions
+  const {tag, textContent, isGif, filter, slidersValue, type, fontSize } = generateOptions
 
   const url = 'https://cataas.com/cat'
 
